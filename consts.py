@@ -1,0 +1,11 @@
+# Bird consts
+
+class BirdConsts:
+    BIRD_IMAGES = None
+    GRAVITY = 10
+    MAX_UP_ANGLE = 45
+    MIN_DOWN_ANGLE = -90
+    ANGULAR_ACCELERATION = 0.5
+    MIN_ANGULAR_ACCELERATION = 5
+    JUMP_VELOCITY = -10
+    FLAP_DOWN_ANGLE = -45
