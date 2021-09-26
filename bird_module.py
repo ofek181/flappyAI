@@ -11,7 +11,7 @@ class Bird:
         bird_image : png
             images of the bird flapping its wings
         x, y position : int
-            x,y position of the bird in the screen
+            x,y position of the bird on the screen
         counter_from_last_jump : int
             number of frames the bird had passed
         angle: int
@@ -26,18 +26,18 @@ class Bird:
         __init__(self, x, y):
             Constructs all the necessary attributes for the bird object.
         move(self):
-            Moves the bird for each frame.
+            Moves the bird at each frame.
         jump(self):
             Implements the jumping action of the bird.
         animate(self):
             Implements the animation of the bird during jumps and flaps
-        """
-    def __init__(self, x_pos: int, y_pos: int):
+    """
+    def __init__(self, x_pos: int = 100, y_pos: int = 250):
         """
             Constructs all the necessary attributes for the bird object.
-                   Parameters:
-                           x_pos (int): x position of the bird
-                           y_pos (int): y position of the bird
+               Parameters:
+                   x_pos (int): x position of the bird
+                   y_pos (int): y position of the bird
         """
         self.image_index = 0  # there's a list of images for making the animation
         self.bird_image = BirdConsts.BIRD_IMAGES[self.image_index]  # use first image as starting image
