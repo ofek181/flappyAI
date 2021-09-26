@@ -1,5 +1,3 @@
-# Bird consts
-
 class BirdConsts:
     BIRD_IMAGES = None
     GRAVITY = 10
@@ -24,4 +22,3 @@ class PipeConsts:
 class FloorConsts:
     FLOOR_IMAGE = None
     FLOOR_VELOCITY = 5
-
