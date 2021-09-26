@@ -1,5 +1,10 @@
+import pygame
+
+
 class BirdConsts:
-    BIRD_IMAGES = None
+    BIRD_IMAGES = [pygame.image.load('images/bird_wing_middle.png'),
+                   pygame.image.load('images/bird_wing_up.png'),
+                   pygame.image.load('images/bird_wing_down.png')]
     GRAVITY = 10
     MAX_UP_ANGLE = 45
     MIN_DOWN_ANGLE = -90
@@ -10,8 +15,8 @@ class BirdConsts:
 
 
 class PipeConsts:
-    TOP_IMAGE = None
-    BOT_IMAGE = None
+    BOT_IMAGE = pygame.image.load('images/pipe.png')
+    TOP_IMAGE = pygame.transform.flip(BOT_IMAGE, False, True)
     MIN_LENGTH = 100
     MAX_LENGTH = 300
     VERTICAL_GAP = 150  # gap between top and bottom pipe
@@ -20,5 +25,13 @@ class PipeConsts:
 
 
 class FloorConsts:
-    FLOOR_IMAGE = None
+    FLOOR_IMAGE = pygame.image.load('images/floor.png')
     FLOOR_VELOCITY = 5
+
+
+class DisplayConsts:
+    FPS = 30
+    SCREEN_WIDTH = 800
+    SCREEN_HEIGHT = 550
+    BACKGROUND_IMAGE = pygame.transform.scale(pygame.image.load('images/background.png'),
+                                              (SCREEN_WIDTH, SCREEN_HEIGHT))
