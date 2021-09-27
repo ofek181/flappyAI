@@ -28,12 +28,12 @@ class Logic:
         """
         collision = False
         floor_pos = floor.y  # y position of the floor
-        bird_butt = bird.y + bird.bird_image.get_length()  # bottom of the bird
+        bird_butt = bird.y + bird.bird_image.get_height()  # bottom of the bird
         bird_mask = pygame.mask.from_surface(bird.bird_image)  # mask of bird
         bot_pipe_mask = pygame.mask.from_surface(pipe_pair.pipe_image[0])  # mask of bot pipe
         top_pipe_mask = pygame.mask.from_surface(pipe_pair.pipe_image[1])  # mask of top pipe
 
-        top_pipe_offset = (round(pipe_pair.x - bird.x), round(pipe_pair.top_pipe_length - bird.y))  # integer offset
+        top_pipe_offset = (round(pipe_pair.x - bird.x), round(pipe_pair.top_pipe_edge - bird.y))  # integer offset
         bot_pipe_offset = (round(pipe_pair.x - bird.x), round(pipe_pair.bot_pipe_edge - bird.y))  # integer offset
 
         pipe_collide_top = bird_mask.overlap(top_pipe_mask, top_pipe_offset)
