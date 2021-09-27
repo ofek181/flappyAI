@@ -5,7 +5,7 @@ class BirdConsts:
     BIRD_IMAGES = [pygame.image.load('images/bird_wing_middle.png'),
                    pygame.image.load('images/bird_wing_up.png'),
                    pygame.image.load('images/bird_wing_down.png')]
-    GRAVITY = 10
+    GRAVITY = 1.5
     MAX_UP_ANGLE = 45
     MIN_DOWN_ANGLE = -90
     ANGULAR_ACCELERATION = 0.5
@@ -31,7 +31,10 @@ class FloorConsts:
 
 class DisplayConsts:
     FPS = 30
-    SCREEN_WIDTH = 800
-    SCREEN_HEIGHT = 550
+    SCREEN_WIDTH = 900
+    SCREEN_HEIGHT = 600
+    FONT_COLOR = (255, 255, 255)
+    FONT_SIZE = 30
+    FONT_TYPE = 'comicsansms'
     BACKGROUND_IMAGE = pygame.transform.scale(pygame.image.load('images/background.png'),
                                               (SCREEN_WIDTH, SCREEN_HEIGHT))
