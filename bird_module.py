@@ -12,12 +12,10 @@ class Bird:
             images of the bird flapping its wings
         x, y position : int
             x,y position of the bird on the screen
-        counter_from_last_jump : int
-            number of frames the bird had passed
         angle: int
             angle of the bird during flight
-        velocity: int
-            velocity of the bird's flight
+        velocity: float
+            velocity of the bird at each frame
         score: int
             number of pipes the bird had passed
         ----------------------------
@@ -42,20 +40,18 @@ class Bird:
         self.image_index = 0  # there's a list of images for making the animation
         self.bird_image = BirdConsts.BIRD_IMAGES[self.image_index]  # use first image as starting image
         self.x, self.y = x_pos, y_pos  # starting x and y position of the bird
-        self.counter_from_last_jump = 0  # counting each jump to form acceleration
         self.angle = 0  # starting angle
-        self.velocity = 0  # starting velocity
+        self.velocity = 0  # initial velocity
         self.score = 0  # starting score
 
     def move(self):
         """
-            Implements the bird's movement for each frame using d = vt + 1/2at^2
+            Implements the bird's movement for each frame
         """
-        self.counter_from_last_jump += 1  # happens for each frame
-        accelerate = 1 / 2 * BirdConsts.GRAVITY * self.counter_from_last_jump ** 2
-        distance = self.velocity * self.counter_from_last_jump + accelerate  # Distance equation
-        self.y = self.y + distance  # update the position of the bird with distance
-        if distance < 0:  # the bird is going upwards
+        self.velocity = self.velocity + BirdConsts.GRAVITY
+        self.velocity = min(self.velocity, BirdConsts.MAX_VELOCITY)
+        self.y = self.y + self.velocity  # update the position of the bird with distance
+        if self.velocity < 0:  # the bird is going upwards
             if self.angle < BirdConsts.MAX_UP_ANGLE:  # the upper limit of the bird's angle
                 angle_diff = (BirdConsts.MAX_UP_ANGLE - self.angle)
                 self.angle += BirdConsts.ANGULAR_ACCELERATION * angle_diff  # accelerate angle up
@@ -72,8 +68,7 @@ class Bird:
         """
             Implements the bird's jumping mechanism
         """
-        self.velocity = BirdConsts.JUMP_VELOCITY  # jumping force
-        self.counter_from_last_jump = 0  # when we jump, we reset the count to 0
+        self.velocity = BirdConsts.JUMP_VELOCITY
 
     def animate(self) -> [BirdConsts.BIRD_IMAGES[0], pygame.rect]:
         """
