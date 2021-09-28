@@ -2,6 +2,7 @@ import pygame
 from floor_module import Floor
 from pipes_module import PipePair
 from bird_module import Bird
+from consts import PipeConsts
 
 
 class Logic:
@@ -11,7 +12,9 @@ class Logic:
           Methods
           ----------------------------
           check_collision(floor, pipe_pair, bird):
-              Checks for collision between the bird object and the pipe/floor/sky
+              Checks for collision between the bird object and the pipe/floor/sky.
+          check_score(bird, pipe):
+              Checks for if the bird had passed the pipe.
       """
     @staticmethod
     def check_collision(floor, pipe_pair, bird) -> bool:
@@ -33,8 +36,8 @@ class Logic:
         bot_pipe_mask = pygame.mask.from_surface(pipe_pair.pipe_image[0])  # mask of bot pipe
         top_pipe_mask = pygame.mask.from_surface(pipe_pair.pipe_image[1])  # mask of top pipe
 
-        top_pipe_offset = (round(pipe_pair.x - bird.x), round(pipe_pair.top_pipe_edge - bird.y))  # integer offset
-        bot_pipe_offset = (round(pipe_pair.x - bird.x), round(pipe_pair.bot_pipe_edge - bird.y))  # integer offset
+        top_pipe_offset = (round(pipe_pair.x - bird.x), round(pipe_pair.top_pipe_head - bird.y))  # integer offset
+        bot_pipe_offset = (round(pipe_pair.x - bird.x), round(pipe_pair.bot_pipe_head - bird.y))  # integer offset
 
         pipe_collide_top = bird_mask.overlap(top_pipe_mask, top_pipe_offset)
         pipe_collide_bot = bird_mask.overlap(bot_pipe_mask, bot_pipe_offset)
@@ -50,6 +53,23 @@ class Logic:
 
         return collision
 
+    @staticmethod
+    def check_score(bird, closest_pipe) -> bool:
+        """
+            Checks if the bird had passed the pipe
+               Parameters:
+                   closest_pipe (PipePair): The closest pipe to the bird on the x axis
+                   bird (Bird): the bird object of the game
+               :returns
+               True if bird had passed the pipe
+               False if bird had not passed the pipe
+
+        """
+        bird_passed = False
+        if bird.x > closest_pipe.x + PipeConsts.TOP_IMAGE.get_width():
+            bird_passed = True
+
+        return bird_passed
 
 
 
