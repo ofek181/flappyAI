@@ -47,16 +47,16 @@ class Display:
         self.screen.blit(floor.floor_image[2], (floor.x[2], floor.y))  # draw the third floor
 
         for pipe_pair in pipe_pairs:  # draw the pipes
-            self.screen.blit(pipe_pair.pipe_image[1], (pipe_pair.x, pipe_pair.top_pipe_edge))
-            self.screen.blit(pipe_pair.pipe_image[0], (pipe_pair.x, pipe_pair.bot_pipe_edge))
+            self.screen.blit(pipe_pair.pipe_image[1], (pipe_pair.x, pipe_pair.top_pipe_head))
+            self.screen.blit(pipe_pair.pipe_image[0], (pipe_pair.x, pipe_pair.bot_pipe_head))
 
         rotated_image, rotated_rect = bird.animate()  # animate the angle of the bird
         self.screen.blit(rotated_image, rotated_rect)  # draw the bird
 
-        surface = self.font.render('Score: ' + str(bird.score), True, self.font_color)  # show score
-        rect = surface.get_rect()
-        rect.midtop = (DisplayConsts.SCREEN_WIDTH // 12, DisplayConsts.SCREEN_HEIGHT // 15)
-        self.screen.blit(surface,rect)
+        # surface = self.font.render('Score: ' + str(bird.score), True, self.font_color)  # show score
+        # rect = surface.get_rect()
+        # rect.midtop = (DisplayConsts.SCREEN_WIDTH // 12, DisplayConsts.SCREEN_HEIGHT // 15)
+        # self.screen.blit(surface,rect)
 
         pygame.time.Clock().tick(DisplayConsts.FPS)  # respect fps for screen updates
         pygame.display.update()  # update the screen
