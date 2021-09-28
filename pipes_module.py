@@ -26,7 +26,7 @@ class PipePair:
            move(self):
                Moves the pipe pair at each frame.
     """
-    def __init__(self, x_pos: int = 300, velocity: int = PipeConsts.PIPE_STARTING_VELOCITY):
+    def __init__(self, x_pos: int = 500, velocity: int = PipeConsts.PIPE_STARTING_VELOCITY):
         """
            Constructs all the necessary attributes for the PipePair object.
               Parameters:
