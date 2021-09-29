@@ -1,16 +1,74 @@
 import neat
-import visualize
+from displayNEAT import Display
+from flappyGame.bird_module import Bird
+from flappyGame.floor_module import Floor
+from flappyGame.pipes_module import PipePair
+from flappyGame.logic_module import Logic
+from flappyGame.consts import *
+global generation
 
 
 class NeatAI:
     @staticmethod
     def eval_genomes(genomes, config):
+        global generation
+        generation += 1
+        score = 0
+        neural_networks = []
+        birds = []
+        genes = []
+        floor = Floor()
+        pipes = [PipePair(x_pos=500 + i * PipeConsts.HORIZONTAL_GAP)
+                 for i in range(10)]  # create 10 pipes
+        closest_pipe = pipes[0]
+        display = Display()
+
         for genome_id, genome in genomes:
-            genome.fitness = 4.0
-            net = neat.nn.FeedForwardNetwork.create(genome, config)
-            for xi, xo in zip(xor_inputs, xor_outputs):
-                output = net.activate(xi)
-                genome.fitness -= (output[0] - xo[0]) ** 2
+            genome.fitness = 0
+            network = neat.nn.FeedForwardNetwork.create(genome, config)
+            neural_networks.append(network)
+            birds.append(Bird())
+            genes.append(genome)
+
+        while len(birds) > 0:
+            display.animate_game(birds=birds, pipes=pipes, floor=floor)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                    break
+
+            # remove pipe if it moves out of screen and append another pipe to the list
+            if pipes[0].x + PipeConsts.TOP_IMAGE.get_width() < 0:
+                pipes.pop(0)  # remove the passed pipe
+                pipes.append(PipePair(pipes[-1].x + PipeConsts.HORIZONTAL_GAP,
+                                      velocity=pipes[-1].velocity))  # append another pipe
+
+            if Logic.check_score(bird=birds[0], closest_pipe=closest_pipe):
+                score += 1
+                closest_pipe = pipes[1]
+
+            for i, bird in enumerate(birds):
+                genes[i].fitness += 0.1
+                bird.move()
+                delta_y = abs(bird.y - closest_pipe.bot_pipe_head)
+                delta_x = abs(bird.x - closest_pipe.x)
+
+                output = neural_networks[birds.index(bird)].activate(bird.velocity, delta_x, delta_y)
+                if output[0] > 0.5:
+                    bird.jump()
+
+            for pipe in pipes:
+                pipe.move()
+
+            floor.move()
+
+            for bird in birds:
+                if Logic.check_collision(floor, closest_pipe, bird):
+                    genes[birds.index(bird)].fitness -= 1
+                    neural_networks.pop(birds.index(bird))
+                    genes.pop(birds.index(bird))
+                    birds.pop(birds.index(bird))
 
     @staticmethod
     def run(config_file):
@@ -33,23 +91,10 @@ class NeatAI:
         p.add_reporter(stats)
         p.add_reporter(neat.Checkpointer(5))
 
-        # Run for up to 300 generations.
-        winner = p.run(eval_genomes, 300)
+        # Run for up to 100 generations.
+        winner = p.run(NeatAI.eval_genomes, 100)
 
         # Display the winning genome.
         print('\nBest genome:\n{!s}'.format(winner))
 
-        # Show output of the most fit genome against training data.
-        print('\nOutput:')
-        winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
-        for xi, xo in zip(xor_inputs, xor_outputs):
-            output = winner_net.activate(xi)
-            print("input {!r}, expected output {!r}, got {!r}".format(xi, xo, output))
 
-        node_names = {-1: 'A', -2: 'B', 0: 'A XOR B'}
-        visualize.draw_net(config, winner, True, node_names=node_names)
-        visualize.plot_stats(stats, ylog=False, view=True)
-        visualize.plot_species(stats, view=True)
-
-        p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-4')
-        p.run(eval_genomes, 10)
