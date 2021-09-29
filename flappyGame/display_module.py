@@ -1,9 +1,5 @@
 import pygame
-import sys
-from logic_module import Logic
-from pipes_module import PipePair
-from bird_module import Bird
-from consts import DisplayConsts, PipeConsts, BirdConsts
+from consts import DisplayConsts
 
 
 class Display:
