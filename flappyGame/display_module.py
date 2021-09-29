@@ -1,5 +1,5 @@
 import pygame
-from consts import DisplayConsts
+from flappyGame.consts import DisplayConsts
 
 
 class Display:

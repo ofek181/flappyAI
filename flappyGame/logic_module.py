@@ -1,8 +1,8 @@
 import pygame
-from floor_module import Floor
-from pipes_module import PipePair
-from bird_module import Bird
-from consts import PipeConsts
+from flappyGame.floor_module import Floor
+from flappyGame.pipes_module import PipePair
+from flappyGame.bird_module import Bird
+from flappyGame.consts import PipeConsts
 
 
 class Logic:
