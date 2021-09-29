@@ -23,15 +23,15 @@ class PipeConsts:
     VERTICAL_GAP = 130  # gap between top and bottom pipe
     HORIZONTAL_GAP = 200  # gap between pipe pairs on the x axis
     PIPE_STARTING_VELOCITY = 5
-    PIPE_MAX_VELOCITY = 17
-    PIPE_ACCELERATION_X = 0.001
+    PIPE_MAX_VELOCITY = 14
+    PIPE_ACCELERATION_X = 0.002
 
 
 class FloorConsts:
     FLOOR_IMAGE = pygame.image.load('images/floor.png')
     FLOOR_STARTING_VELOCITY = 5
-    FLOOR_MAX_VELOCITY = 17
-    FLOOR_ACCELERATION_X = 0.001
+    FLOOR_MAX_VELOCITY = 14
+    FLOOR_ACCELERATION_X = 0.002
 
 
 class DisplayConsts:
