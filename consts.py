@@ -39,7 +39,10 @@ class DisplayConsts:
     SCREEN_WIDTH = 600
     SCREEN_HEIGHT = 500
     FONT_COLOR = (255, 255, 255)
-    FONT_SIZE = 50
-    FONT_TYPE = 'comicsansms'
+    GAME_OVER_FONT_COLOR = (200, 40, 80)
+    FONT_SIZE = 70
+    GAME_OVER_FONT_SIZE = 80
+    FONT_TYPE = 'Comic Sans MS'
+    GAME_OVER_FONT_TYPE = 'Comic Sans MS'
     BACKGROUND_IMAGE = pygame.transform.scale(pygame.image.load('images/background.png'),
                                               (SCREEN_WIDTH, SCREEN_HEIGHT))
