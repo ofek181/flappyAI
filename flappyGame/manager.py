@@ -1,11 +1,11 @@
 import pygame
 import sys
-from bird_module import Bird
-from floor_module import Floor
-from pipes_module import PipePair
-from display_module import Display
-from logic_module import Logic
-import consts
+from flappyGame.bird_module import Bird
+from flappyGame.floor_module import Floor
+from flappyGame.pipes_module import PipePair
+from flappyGame.display_module import Display
+from flappyGame.logic_module import Logic
+import flappyGame.consts as consts
 
 
 class Game:

@@ -1,5 +1,5 @@
 import random
-from consts import PipeConsts
+from flappyGame.consts import PipeConsts
 
 
 class PipePair:

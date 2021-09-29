@@ -1,4 +1,4 @@
-from consts import FloorConsts
+from flappyGame.consts import FloorConsts
 
 
 class Floor:
