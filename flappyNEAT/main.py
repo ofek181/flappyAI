@@ -8,9 +8,9 @@ def main():
     # current working directory.
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config-feedforward.txt')
-    NeatAI.run(config_path)
+    # NeatAI.run(config_path)
 
-    # NeatAI.replay_genome(config_path)
+    NeatAI.replay_genome(config_path)
 
 
 if __name__ == '__main__':
