@@ -1,5 +1,9 @@
 import pygame
-from consts import DisplayConsts
+import sys
+from logic_module import Logic
+from pipes_module import PipePair
+from bird_module import Bird
+from consts import DisplayConsts, PipeConsts, BirdConsts
 
 
 class Display:
@@ -10,16 +14,16 @@ class Display:
              ----------------------------
              screen : pygame object
                  an attribute to represent the screen of the game.
-             font : pygame object
-                 implements the font of the game.
-             font_color : int tuple
-                 three integer tuple to represent the RGB color
              ----------------------------
              Methods
              ----------------------------
              __init__(self):
                  Constructs all the necessary attributes for the Display object.
-             animate_game(self):
+             show_game_over(self):
+                 Displays the game over screen
+             show_score(self, bird):
+                 Displays the score of the bird
+             animate_game(self, bird, pipe_pairs, floor):
                  Uses pygame methods in order to display the game on the screen.
     """
     def __init__(self):
@@ -28,8 +32,28 @@ class Display:
         """
         pygame.init()
         self.screen = pygame.display.set_mode((DisplayConsts.SCREEN_HEIGHT, DisplayConsts.SCREEN_HEIGHT))
-        self.font = pygame.font.SysFont(DisplayConsts.FONT_TYPE, DisplayConsts.FONT_SIZE)
-        self.font_color = DisplayConsts.FONT_COLOR  # white RGB color
+
+    def show_game_over(self):
+        """
+            Displays the game over screen
+        """
+        font = pygame.font.SysFont(DisplayConsts.GAME_OVER_FONT_TYPE, DisplayConsts.GAME_OVER_FONT_SIZE)
+        surface = font.render("Game Over", True, DisplayConsts.GAME_OVER_FONT_COLOR)  # Display game over
+        rect = surface.get_rect()
+        rect.midtop = (DisplayConsts.SCREEN_WIDTH // 2.5, DisplayConsts.SCREEN_HEIGHT // 20)
+        self.screen.blit(surface, rect)
+        pygame.display.update()  # update the screen
+
+    def show_score(self, bird):
+        """
+            Displays the score over the screen
+        """
+        font = pygame.font.SysFont(DisplayConsts.FONT_TYPE, DisplayConsts.FONT_SIZE)
+        surface = font.render(str(bird.score), True, DisplayConsts.FONT_COLOR)  # show score
+        rect = surface.get_rect()
+        rect.midtop = (DisplayConsts.SCREEN_WIDTH // 2.5, DisplayConsts.SCREEN_HEIGHT // 20)
+        self.screen.blit(surface, rect)
+        pygame.display.update()  # update the screen
 
     def animate_game(self, bird, pipe_pairs, floor):
         """
@@ -53,12 +77,8 @@ class Display:
         rotated_image, rotated_rect = bird.animate()  # animate the angle of the bird
         self.screen.blit(rotated_image, rotated_rect)  # draw the bird
 
-        # surface = self.font.render('Score: ' + str(bird.score), True, self.font_color)  # show score
-        # rect = surface.get_rect()
-        # rect.midtop = (DisplayConsts.SCREEN_WIDTH // 12, DisplayConsts.SCREEN_HEIGHT // 15)
-        # self.screen.blit(surface,rect)
-
         pygame.time.Clock().tick(DisplayConsts.FPS)  # respect fps for screen updates
         pygame.display.update()  # update the screen
+
 
 
