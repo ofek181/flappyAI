@@ -47,6 +47,7 @@ class NeatAI:
         pipes = [PipePair(x_pos=500 + i * consts.PipeConsts.HORIZONTAL_GAP)
                  for i in range(10)]  # create 10 pipes
         closest_pipe = pipes[0]
+        next_pipe = pipes[1]
         display = NeatDisplay()
         for genome_id, genome in genomes:
             genome.fitness = 0
@@ -78,17 +79,22 @@ class NeatAI:
             if Logic.check_score(bird=birds[0], closest_pipe=closest_pipe):
                 score += 1
                 closest_pipe = pipes[1]
+                next_pipe = pipes[2]
 
             # run over all birds and move them as well as calculate distances to closest pipe.
             for i, bird in enumerate(birds):
                 genes[i].fitness += 0.1
                 bird.move()
-                delta_y = abs(bird.y - closest_pipe.bot_pipe_head)
-                delta_x = abs(bird.x - closest_pipe.x)
+                delta_y_closest = abs(bird.y - closest_pipe.bot_pipe_head)
+                delta_x_closest = abs(bird.x - closest_pipe.x)
+                delta_y_next = abs(bird.y- next_pipe.bot_pipe_head)
+                delta_x_next = abs(bird.x - next_pipe.x)
 
                 # run the neural network with following inputs:
-                # velocity of bird, velocity of closest pipe, x axis distance and y axis distance
-                output = neural_networks[birds.index(bird)].activate((bird.velocity, closest_pipe.velocity, delta_x, delta_y))
+                # velocity of bird, velocity of closest pipe, x axis distance and y axis distance for next 2 pipes
+                output = neural_networks[birds.index(bird)].activate((bird.velocity, closest_pipe.velocity,
+                                                                      delta_x_closest, delta_y_closest,
+                                                                      delta_x_next, delta_y_next))
                 # jump if output neuron returns value over 0.5
                 if output[0] > 0.5:
                     bird.jump()
