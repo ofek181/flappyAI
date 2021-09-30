@@ -115,7 +115,7 @@ class NeatAI:
                     birds.pop(i)
 
     @staticmethod
-    def test(config_path, genome_path="winner.pkl"):
+    def test(config_path, genome_path="flappyNEAT/winner.pkl"):
         """
             Loads the winner network and runs the flappy bird game
             :param
