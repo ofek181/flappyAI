@@ -2,7 +2,7 @@ import pygame
 import neat
 import sys
 from flappyGame import Bird, PipePair, Floor, Logic, consts
-from game_animation import NeatDisplay
+from .game_animation import NeatDisplay
 
 try:
     import cPickle as pickle  # pylint: disable=import-error
