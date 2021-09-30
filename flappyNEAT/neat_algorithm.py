@@ -3,6 +3,7 @@ import neat
 import sys
 from flappyGame import Bird, PipePair, Floor, Logic, consts
 from game_animation import NeatDisplay
+
 try:
     import cPickle as pickle  # pylint: disable=import-error
 except ImportError:
@@ -12,8 +13,30 @@ global generation
 
 
 class NeatAI:
+    """
+        A class implementing the NEAT algorithm on flappyGame.
+        ----------------------------
+        Methods
+        ----------------------------
+        eval_genomes(genomes, config):
+            Evaluates all genome of birds by pre defined fitness.
+        test(config_path, genome_path):
+            Loads the winner network and runs the flappy bird game.
+        train(config_file):
+            Runs the NEAT algorithm to learn how to play flappy bird.
+
+    """
     @staticmethod
     def eval_genomes(genomes, config):
+        """
+            Evaluates all genome of birds by pre defined fitness.
+            :param
+                 genomes: each genome includes a list of connection genes.
+                 config: the NEAT config file.
+            :return:
+                None
+        """
+        # initialize parameters
         global generation
         generation += 1
         score = 0
@@ -25,7 +48,6 @@ class NeatAI:
                  for i in range(10)]  # create 10 pipes
         closest_pipe = pipes[0]
         display = NeatDisplay()
-
         for genome_id, genome in genomes:
             genome.fitness = 0
             network = neat.nn.FeedForwardNetwork.create(genome, config)
@@ -33,9 +55,11 @@ class NeatAI:
             birds.append(Bird())
             genes.append(genome)
 
+        # game loop for each generation
         while len(birds) > 0:
+            # game display and event handling
             display.animate_game(birds=birds, pipes=pipes, floor=floor)
-            display.show_score(score=score)
+            display.show_score_and_birds_alive(score=score, birds=birds)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -50,34 +74,50 @@ class NeatAI:
                 pipes.append(PipePair(pipes[-1].x + consts.PipeConsts.HORIZONTAL_GAP,
                                       velocity=pipes[-1].velocity))  # append another pipe
 
+            # check score of bird[0] which is the last to be alive
             if Logic.check_score(bird=birds[0], closest_pipe=closest_pipe):
                 score += 1
                 closest_pipe = pipes[1]
 
+            # run over all birds and move them as well as calculate distances to closest pipe.
             for i, bird in enumerate(birds):
                 genes[i].fitness += 0.1
                 bird.move()
                 delta_y = abs(bird.y - closest_pipe.bot_pipe_head)
                 delta_x = abs(bird.x - closest_pipe.x)
 
-                output = neural_networks[birds.index(bird)].activate((bird.velocity, delta_x, delta_y))
+                # run the neural network with following inputs:
+                # velocity of bird, velocity of closest pipe, x axis distance and y axis distance
+                output = neural_networks[birds.index(bird)].activate((bird.velocity, closest_pipe.velocity, delta_x, delta_y))
+                # jump if output neuron returns value over 0.5
                 if output[0] > 0.5:
                     bird.jump()
 
+            # move all pipes
             for pipe in pipes:
                 pipe.move()
 
+            # move the floor
             floor.move()
 
-            for bird in birds:
+            # pop bird if it collides
+            for i, bird in enumerate(birds):
                 if Logic.check_collision(floor, closest_pipe, bird):
-                    genes[birds.index(bird)].fitness -= 1
-                    neural_networks.pop(birds.index(bird))
-                    genes.pop(birds.index(bird))
-                    birds.pop(birds.index(bird))
+                    genes[i].fitness -= 2
+                    neural_networks.pop(i)
+                    genes.pop(i)
+                    birds.pop(i)
 
     @staticmethod
-    def replay_genome(config_path, genome_path="winner.pkl"):
+    def test(config_path, genome_path="winner.pkl"):
+        """
+            Loads the winner network and runs the flappy bird game
+            :param
+                config_file: location of config file.
+                genome_path: winner network.
+            :return:
+                None
+            """
         global generation
         generation = 0
         # Load requried NEAT config
@@ -95,14 +135,16 @@ class NeatAI:
         NeatAI.eval_genomes(genomes, config)
 
     @staticmethod
-    def run(config_file):
+    def train(config_file):
+        """
+            Runs the NEAT algorithm to learn how to play flappy bird.
+            :param
+                config_file: location of config file
+            :return:
+                saves the defined winner in a pkl file
+            """
         global generation
         generation = 0
-        """
-            runs the NEAT algorithm to learn how to play flappy bird.
-            :param config_file: location of config file
-            :return: None
-            """
         # Load configuration.
         config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                              neat.DefaultSpeciesSet, neat.DefaultStagnation,
