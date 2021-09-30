@@ -10,7 +10,7 @@ def start_neat():
     """
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, 'config-feedforward.txt')
-    # NeatAI.train(config_path)  # train
+    NeatAI.train(config_path)  # train
 
-    NeatAI.test(config_path)  # test
+    # NeatAI.test(config_path)  # test
 

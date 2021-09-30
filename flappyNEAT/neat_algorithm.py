@@ -162,7 +162,7 @@ class NeatAI:
         # Run for up to 100 generations.
         winner = p.run(NeatAI.eval_genomes, 100)
 
-        with open("winner.pkl", "wb") as f:
+        with open("flappyNEAT/winner.pkl", "wb") as f:
             pickle.dump(winner, f)
             f.close()
 
