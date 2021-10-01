@@ -1,12 +1,13 @@
 import pygame
 import os
-local_dir = os.path.join(os.path.dirname(__file__), "images")
+local_dir_images = os.path.join(os.path.dirname(__file__), "images")
+local_dir_music = os.path.join(os.path.dirname(__file__), "music")
 
 
 class BirdConsts:
-    BIRD_IMAGES = [pygame.image.load(os.path.join(local_dir, 'bird_wing_middle.png')),
-                   pygame.image.load(os.path.join(local_dir, 'bird_wing_up.png')),
-                   pygame.image.load(os.path.join(local_dir, 'bird_wing_down.png'))]
+    BIRD_IMAGES = [pygame.image.load(os.path.join(local_dir_images, 'bird_wing_middle.png')),
+                   pygame.image.load(os.path.join(local_dir_images, 'bird_wing_up.png')),
+                   pygame.image.load(os.path.join(local_dir_images, 'bird_wing_down.png'))]
     GRAVITY = 2
     MAX_VELOCITY = 14
     MAX_UP_ANGLE = 45
@@ -18,7 +19,7 @@ class BirdConsts:
 
 
 class PipeConsts:
-    BOT_IMAGE = pygame.image.load(os.path.join(local_dir, 'pipe.png'))
+    BOT_IMAGE = pygame.image.load(os.path.join(local_dir_images, 'pipe.png'))
     TOP_IMAGE = pygame.transform.flip(BOT_IMAGE, False, True)
     MIN_LENGTH = 100
     MAX_LENGTH = 250
@@ -30,7 +31,7 @@ class PipeConsts:
 
 
 class FloorConsts:
-    FLOOR_IMAGE = pygame.image.load(os.path.join(local_dir, 'floor.png'))
+    FLOOR_IMAGE = pygame.image.load(os.path.join(local_dir_images, 'floor.png'))
     FLOOR_STARTING_VELOCITY = 6
     FLOOR_MAX_VELOCITY = 13
     FLOOR_ACCELERATION_X = 0.002
@@ -46,5 +47,15 @@ class DisplayConsts:
     GAME_OVER_FONT_SIZE = 80
     FONT_TYPE = 'Comic Sans MS'
     GAME_OVER_FONT_TYPE = 'Comic Sans MS'
-    BACKGROUND_IMAGE = pygame.transform.scale(pygame.image.load(os.path.join(local_dir, 'background.png')),
+    BACKGROUND_IMAGE = pygame.transform.scale(pygame.image.load(os.path.join(local_dir_images, 'background.png')),
                                               (SCREEN_WIDTH, SCREEN_HEIGHT))
+
+
+class AudioConsts:
+    BACKGROUND_AUDIO = os.path.join(local_dir_music, 'background_music.wav')
+    GAME_OVER_AUDIO = os.path.join(local_dir_music, 'game_over.wav')
+    SCORE_AUDIO = os.path.join(local_dir_music, 'score.wav')
+
+
+
+
