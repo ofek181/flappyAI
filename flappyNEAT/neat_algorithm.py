@@ -2,7 +2,9 @@ import pygame
 import neat
 import sys
 import pickle
-from flappyGame import Bird, PipePair, Floor, Logic, consts
+
+import flappyGame
+from flappyGame import Bird, PipePair, Floor, Logic, Game, consts
 from .game_animation import NeatDisplay
 global generation
 
@@ -119,9 +121,7 @@ class NeatAI:
             :return:
                 None
             """
-        global generation
-        generation = 0
-        # Load requried NEAT config
+        # Load NEAT config
         config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet,
                                     neat.DefaultStagnation, config_path)
 
@@ -129,11 +129,94 @@ class NeatAI:
         with open(genome_path, "rb") as f:
             genome = pickle.load(f)
 
-        # Convert loaded genome into required data structure
-        genomes = [(1, genome)]
+        # audio parameters
+        pygame.mixer.init()
+        background_sound = pygame.mixer.Sound(consts.AudioConsts.BACKGROUND_AUDIO)
+        game_over_sound = pygame.mixer.Sound(consts.AudioConsts.GAME_OVER_AUDIO)
+        score_sound = pygame.mixer.Sound(consts.AudioConsts.SCORE_AUDIO)
+        pygame.mixer.Sound.set_volume(background_sound, 0.5)
+        channel1 = pygame.mixer.Channel(0)
+        channel2 = pygame.mixer.Channel(1)
 
-        # Call game with only the loaded genome
-        NeatAI.eval_genomes(genomes, config)
+        # initialization
+        bird = Bird()
+        floor = Floor()
+        pipes = [PipePair(x_pos=500 + i * consts.PipeConsts.HORIZONTAL_GAP)
+                 for i in range(10)]  # create 10 pipes
+        closest_pipe = pipes[0]
+        next_pipe = pipes[1]
+        display = flappyGame.Display()
+        game_over_manager = Game()
+        neural_network = neat.nn.FeedForwardNetwork.create(genome, config)
+
+        channel1.play(background_sound, loops=-1)
+        while True:
+            # game display and event handling
+            display.animate_game(bird=bird,pipe_pairs=pipes,floor=floor)
+            display.show_score(bird=bird)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.event.post(pygame.event.Event(pygame.QUIT))
+
+            # remove pipe if it moves out of screen and append another pipe to the list
+            if pipes[0].x + consts.PipeConsts.TOP_IMAGE.get_width() < 0:
+                pipes.pop(0)  # remove the passed pipe
+                pipes.append(PipePair(pipes[-1].x + consts.PipeConsts.HORIZONTAL_GAP,
+                                      velocity=pipes[-1].velocity))  # append another pipe
+
+            # check score of bird
+            if Logic.check_score(bird=bird, closest_pipe=closest_pipe):
+                channel2.play(score_sound)
+                bird.score += 1
+                closest_pipe = pipes[1]
+                next_pipe = pipes[2]
+
+            bird.move()
+            delta_y_closest = abs(bird.y - closest_pipe.bot_pipe_head)
+            delta_x_closest = abs(bird.x - closest_pipe.x)
+            delta_y_next = abs(bird.y - next_pipe.bot_pipe_head)
+            delta_x_next = abs(bird.x - next_pipe.x)
+
+            output = neural_network.activate((bird.velocity, closest_pipe.velocity,
+                                              delta_x_closest, delta_y_closest,
+                                              delta_x_next, delta_y_next))
+
+            # jump if output neuron returns value over 0.5
+            if output[0] > 0.5:
+                bird.jump()
+
+            # move all pipes
+            for pipe in pipes:
+                pipe.move()
+
+            # move the floor
+            floor.move()
+
+            if Logic.check_collision(floor, closest_pipe, bird):
+                channel1.play(game_over_sound)
+                while True:
+                    # animate bird falling
+                    if bird.y + bird.bird_image.get_height() <= floor.y:
+                        display.show_game_over()
+                        display.animate_game(bird, pipes, floor)
+                        bird.move()
+
+                    else:
+                        display.show_game_over()
+                        display.animate_game(bird, pipes, floor)
+
+                    # exit the game
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            sys.exit()
+                        elif event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_ESCAPE:
+                                pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     @staticmethod
     def train(config_file):
