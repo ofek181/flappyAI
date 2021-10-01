@@ -125,14 +125,12 @@ class Game:
             Restarts the game or exits depending on the action of the user.
         """
         while True:
+            self.display.show_game_over()
+            self.display.animate_game(self.bird, self.pipes, self.floor)
+
             # animate bird falling
             if self.bird.y + self.bird.bird_image.get_height() <= self.floor.y:
-                self.display.show_game_over()
-                self.display.animate_game(self.bird, self.pipes, self.floor)
                 self.bird.move()
-
-            else:
-                self.display.show_game_over()
 
             # restart the game or exit
             for event in pygame.event.get():

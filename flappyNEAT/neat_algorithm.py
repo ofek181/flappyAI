@@ -199,15 +199,12 @@ class NeatAI:
             if Logic.check_collision(floor, closest_pipe, bird):
                 channel1.play(game_over_sound)
                 while True:
+                    display.show_game_over()
+                    display.animate_game(bird, pipes, floor)
+                    
                     # animate bird falling
                     if bird.y + bird.bird_image.get_height() <= floor.y:
-                        display.show_game_over()
-                        display.animate_game(bird, pipes, floor)
                         bird.move()
-
-                    else:
-                        display.show_game_over()
-                        display.animate_game(bird, pipes, floor)
 
                     # exit the game
                     for event in pygame.event.get():
