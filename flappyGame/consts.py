@@ -39,7 +39,7 @@ class FloorConsts:
 
 class DisplayConsts:
     FPS = 30
-    SCREEN_WIDTH = 600
+    SCREEN_WIDTH = 800
     SCREEN_HEIGHT = 500
     FONT_COLOR = (255, 255, 255)
     GAME_OVER_FONT_COLOR = (200, 40, 80)

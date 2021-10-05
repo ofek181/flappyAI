@@ -201,7 +201,6 @@ class NeatAI:
                 while True:
                     display.show_game_over()
                     display.animate_game(bird, pipes, floor)
-                    
                     # animate bird falling
                     if bird.y + bird.bird_image.get_height() <= floor.y:
                         bird.move()

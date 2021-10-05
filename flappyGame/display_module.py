@@ -27,7 +27,7 @@ class Display:
             Constructs all the necessary attributes for the Display object.
         """
         pygame.init()
-        self.screen = pygame.display.set_mode((DisplayConsts.SCREEN_HEIGHT, DisplayConsts.SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((DisplayConsts.SCREEN_WIDTH, DisplayConsts.SCREEN_HEIGHT))
 
     def show_game_over(self):
         """

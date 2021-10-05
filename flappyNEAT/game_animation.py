@@ -23,7 +23,7 @@ class NeatDisplay:
     def __init__(self):
 
         pygame.init()
-        self.screen = pygame.display.set_mode((DisplayConsts.SCREEN_HEIGHT, DisplayConsts.SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((DisplayConsts.SCREEN_WIDTH, DisplayConsts.SCREEN_HEIGHT))
 
     def show_score_and_birds_alive(self, score: int, birds: list):
         """
